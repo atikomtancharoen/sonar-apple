@@ -22,7 +22,7 @@ import fr.insideapp.sonarqube.objc.issues.oclint.retriever.OCLintJSONCompilation
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.sonar.api.batch.sensor.internal.SensorContextTester;
+import com.sonarsource.scanner.engine.sensor.test.fixtures.SensorContextTester;
 import org.sonar.api.config.Configuration;
 
 import java.io.File;

@@ -24,7 +24,7 @@ import fr.insideapp.sonarqube.objc.issues.oclint.runner.OCLintRunner;
 import org.junit.Before;
 import org.junit.Test;
 import org.sonar.api.batch.fs.FileSystem;
-import org.sonar.api.batch.fs.internal.DefaultFileSystem;
+import org.sonar.scanner.plugin.api.impl.fs.DefaultFileSystem;
 import org.sonar.api.config.Configuration;
 
 import java.io.File;

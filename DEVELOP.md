@@ -4,7 +4,7 @@ This documentation is a guide for plugin developers / contributors.
 
 ## Requirements
 
- - A recent Java JDK version
+ - Java JDK 21
  - Maven 3.8 or later
  - A local SonarQube instance for local testing
 
@@ -150,4 +150,3 @@ Once released, remember to update the project version on the `develop`branch to 
 ```bash
 $ mvn versions:set -DnewVersion=0.2-SNAPSHOT
 ``` 
-
