@@ -24,6 +24,7 @@ import org.sonar.api.config.Configuration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -45,6 +46,8 @@ public final class PeripheryRunnerTest {
         peripheryExtensionProvider = mock(PeripheryExtensionProvider.class);
         runner = new PeripheryRunner(configuration, peripheryExtensionProvider);
         clazz = runner.getClass();
+        mockProjectPath(Optional.empty());
+        mockSchemes(List.of());
     }
 
     @Test
@@ -74,10 +77,38 @@ public final class PeripheryRunnerTest {
         });
     }
 
+    @Test
+    public void options_project_and_schemes() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method options = clazz.getDeclaredMethod("arguments");
+        options.setAccessible(true);
+        mockIndexStorePath(Optional.of("derivedData/Index.noindex/DataStore"));
+        mockProjectPath(Optional.of("TrueVisions.xcworkspace"));
+        mockSchemes(List.of("TrueVisions-Dev", "TrueVisions-Prod"));
+
+        String[] optionsBuilt = (String[]) options.invoke(runner);
+
+        assertThat(optionsBuilt).isEqualTo(new String[]{
+                "scan",
+                "--skip-build",
+                "--project", "TrueVisions.xcworkspace",
+                "--schemes", "TrueVisions-Dev", "TrueVisions-Prod",
+                "--index-store-path", "derivedData/Index.noindex/DataStore",
+                "--format", "json", "--quiet"
+        });
+    }
+
     // Private
 
     private void mockIndexStorePath(Optional<String> value) {
         when(peripheryExtensionProvider.indexStorePath(configuration)).thenReturn(value);
+    }
+
+    private void mockProjectPath(Optional<String> value) {
+        when(peripheryExtensionProvider.projectPath(configuration)).thenReturn(value);
+    }
+
+    private void mockSchemes(List<String> values) {
+        when(peripheryExtensionProvider.schemes(configuration)).thenReturn(values);
     }
 
 

@@ -36,6 +36,8 @@ public class PeripheryExtensionProvider implements ExtensionProvider {
     private static final String CATEGORY = "Periphery";
 
     private static final String INDEX_STORE_PATH_KEY = "sonar.apple.periphery.indexStorePath";
+    private static final String PROJECT_PATH_KEY = "sonar.apple.periphery.projectPath";
+    private static final String SCHEMES_KEY = "sonar.apple.periphery.schemes";
     private static final PropertyDefinition INDEX_STORE_PATH_PROPERTY = PropertyDefinition
             .builder(INDEX_STORE_PATH_KEY)
             .name("Index Store folder path")
@@ -44,10 +46,29 @@ public class PeripheryExtensionProvider implements ExtensionProvider {
             .category(APPLE_CATEGORY)
             .subCategory(CATEGORY)
             .build();
+    private static final PropertyDefinition PROJECT_PATH_PROPERTY = PropertyDefinition
+            .builder(PROJECT_PATH_KEY)
+            .name("Project or workspace path")
+            .description("Path to the Xcode project or workspace used by Periphery.")
+            .onQualifiers(Qualifiers.PROJECT)
+            .category(APPLE_CATEGORY)
+            .subCategory(CATEGORY)
+            .build();
+    private static final PropertyDefinition SCHEMES_PROPERTY = PropertyDefinition
+            .builder(SCHEMES_KEY)
+            .name("Schemes")
+            .description("Xcode schemes used by Periphery to identify the targets included in the Index Store.")
+            .multiValues(true)
+            .onQualifiers(Qualifiers.PROJECT)
+            .category(APPLE_CATEGORY)
+            .subCategory(CATEGORY)
+            .build();
 
     public List<Object> extensions() {
         return Arrays.asList(
                 INDEX_STORE_PATH_PROPERTY,
+                PROJECT_PATH_PROPERTY,
+                SCHEMES_PROPERTY,
                 PeripheryRulesDefinition.class,
                 PeripheryRunner.class,
                 PeripheryReportParser.class,
@@ -59,6 +80,15 @@ public class PeripheryExtensionProvider implements ExtensionProvider {
     public Optional<String> indexStorePath(Configuration configuration) {
         return configuration
                 .get(INDEX_STORE_PATH_KEY);
+    }
+
+    public Optional<String> projectPath(Configuration configuration) {
+        return configuration
+                .get(PROJECT_PATH_KEY);
+    }
+
+    public List<String> schemes(Configuration configuration) {
+        return Arrays.asList(configuration.getStringArray(SCHEMES_KEY));
     }
 
 }

@@ -41,7 +41,7 @@ public final class PeripheryExtensionProviderTest {
 
     @Test
     public void extensions() {
-        assertThat(provider.extensions()).hasSize(6);
+        assertThat(provider.extensions()).hasSize(8);
     }
 
     @Test
@@ -64,5 +64,37 @@ public final class PeripheryExtensionProviderTest {
         assertThat(indexStorePath).isPresent().contains("/path/to/indexStore");
     }
 
-}
+    @Test
+    public void projectPath_notSpecified() {
+        when(configuration.get("sonar.apple.periphery.projectPath")).thenReturn(Optional.empty());
 
+        Optional<String> projectPath = provider.projectPath(configuration);
+
+        assertThat(projectPath).isNotPresent();
+    }
+
+    @Test
+    public void projectPath_specified() {
+        when(configuration.get("sonar.apple.periphery.projectPath")).thenReturn(Optional.of("MyApp.xcworkspace"));
+
+        Optional<String> projectPath = provider.projectPath(configuration);
+
+        assertThat(projectPath).contains("MyApp.xcworkspace");
+    }
+
+    @Test
+    public void schemes_notSpecified() {
+        when(configuration.getStringArray("sonar.apple.periphery.schemes")).thenReturn(new String[]{});
+
+        assertThat(provider.schemes(configuration)).isEmpty();
+    }
+
+    @Test
+    public void schemes_specified() {
+        when(configuration.getStringArray("sonar.apple.periphery.schemes"))
+                .thenReturn(new String[]{"MyApp", "MyAppTests"});
+
+        assertThat(provider.schemes(configuration)).containsExactly("MyApp", "MyAppTests");
+    }
+
+}

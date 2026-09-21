@@ -33,7 +33,7 @@ The plugin is designed to support Swift 5 syntax.
 
 ### Server-side
 
-SonarQube 9.9+ is required.
+SonarQube Community Build 26.8+ running on Java 21 is required.
 
 - Download the plugin binary into the ``$SONARQUBE_HOME/extensions/plugins`` directory.
 - Restart the server.
@@ -80,7 +80,13 @@ sonar.tests=iOSAppTests
 # Index Store folder path.
 # This matches the parameter "-derivedDataPath" in xcodebuild (see below).
 # Warning: starting Xcode 14 the folder "Index" is renamed "Index.noindex".
-sonar.apple.periphery.indexStorePath=derivedData/Index/DataStore
+sonar.apple.periphery.indexStorePath=derivedData/Index.noindex/DataStore
+
+# Path to the Xcode project or workspace used to create the Index Store.
+sonar.apple.periphery.projectPath=MyApp.xcworkspace
+
+# One or more comma-separated Xcode schemes included in the Index Store.
+sonar.apple.periphery.schemes=MyApp
 
 ## OCLint ##
 
@@ -126,8 +132,10 @@ sonar-scanner
 
 #### Periphery
 
-The plugin assumes the Periphery configuration is properly settled for your project, in the [Periphery configuration file](https://github.com/peripheryapp/periphery#configuration).
-The required information are the project, the schemes and the targets. You also need to provide the workspace, if you have one.
+The plugin can pass the project or workspace and schemes directly to Periphery through
+`sonar.apple.periphery.projectPath` and `sonar.apple.periphery.schemes`. Alternatively,
+you can keep this information in the [Periphery configuration file](https://github.com/peripheryapp/periphery#configuration).
+When both are present, the scanner properties are passed as command-line options and take precedence.
 ```yaml
 workspace: path/to/workspace.xcworkspace # optional
 project: path/to/project.xcodeproj

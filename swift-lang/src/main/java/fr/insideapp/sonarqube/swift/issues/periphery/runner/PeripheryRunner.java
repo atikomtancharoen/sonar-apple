@@ -46,6 +46,8 @@ public final class PeripheryRunner extends PeripheryRunnable {
         List<String> options = new ArrayList<>();
         options.add("scan");
         options.add("--skip-build");
+        options.addAll(projectPath());
+        options.addAll(schemes());
         options.addAll(indexStorePath());
         options.addAll(Arrays.asList("--format", "json"));
         options.add("--quiet");
@@ -56,6 +58,24 @@ public final class PeripheryRunner extends PeripheryRunnable {
         List<String> options = new ArrayList<>();
         Optional<String> indexStorePath = peripheryExtensionProvider.indexStorePath(configuration);
         indexStorePath.ifPresent(s -> options.addAll(Arrays.asList("--index-store-path", s)));
+        return options;
+    }
+
+    private List<String> projectPath() {
+        List<String> options = new ArrayList<>();
+        Optional<String> projectPath = peripheryExtensionProvider.projectPath(configuration);
+        projectPath.ifPresent(s -> options.addAll(Arrays.asList("--project", s)));
+        return options;
+    }
+
+    private List<String> schemes() {
+        List<String> schemes = peripheryExtensionProvider.schemes(configuration);
+        if (schemes.isEmpty()) {
+            return List.of();
+        }
+        List<String> options = new ArrayList<>();
+        options.add("--schemes");
+        options.addAll(schemes);
         return options;
     }
 

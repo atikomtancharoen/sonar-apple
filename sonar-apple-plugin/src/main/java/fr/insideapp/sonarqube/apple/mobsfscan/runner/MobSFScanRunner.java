@@ -39,6 +39,7 @@ public final class MobSFScanRunner extends MobSFScanRunnable {
     protected String[] arguments() {
         List<String> options = new ArrayList<>();
         options.add("--json");
+        options.add("--no-fail");
         options.addAll(sonarProjectConfiguration.sources());
         return options.stream().toArray(String[]::new);
     }

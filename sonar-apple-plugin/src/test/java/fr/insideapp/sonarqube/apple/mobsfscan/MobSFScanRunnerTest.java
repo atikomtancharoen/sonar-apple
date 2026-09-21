@@ -51,7 +51,7 @@ public final class MobSFScanRunnerTest {
         mockSources(List.of("source1"));
         String[] optionsBuilt = (String[]) options.invoke(runner);
         assertThat(optionsBuilt).isEqualTo(new String[]{
-                "--json",
+                "--json", "--no-fail",
                 "source1"
         });
     }
@@ -63,7 +63,7 @@ public final class MobSFScanRunnerTest {
         mockSources(List.of("source1", "source2"));
         String[] optionsBuilt = (String[]) options.invoke(runner);
         assertThat(optionsBuilt).isEqualTo(new String[]{
-                "--json",
+                "--json", "--no-fail",
                 "source1", "source2"
         });
     }
